@@ -11,6 +11,7 @@ dependencies:
     - "~/.meteor"
     - "~/docker"
   override:
+    - mkdir $HOME/reaction
     - cd $HOME/reaction
     - .reaction/scripts/clone-packages.sh
     - .reaction/docker/scripts/plugin-loader.sh
