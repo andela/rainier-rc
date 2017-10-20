@@ -6,8 +6,8 @@ machine:
   pre:
     - hash meteor 2>/dev/null || curl https://install.meteor.com | /bin/sh
   environment:
-    COVERALLS_REPO_TOKEN: COVERALL_REPO_TOKEN
-    COVERALLS_PARALLEL: COVERALL_PARALLEL
+    COVERALLS_REPO_TOKEN: kX6eoNJZicXsbDhiW65lD1PCSiwvFgrln
+    COVERALLS_PARALLEL: true
 
 
 dependencies:
@@ -55,4 +55,4 @@ deployment:
 
   notify:
     webhooks:
-      - url: https://coveralls.io/webhook?repo_token=COVERALL_REPO_TOKEN
+      - url: https://coveralls.io/webhook?repo_token=kX6eoNJZicXsbDhiW65lD1PCSiwvFgrln
