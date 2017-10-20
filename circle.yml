@@ -5,6 +5,10 @@ machine:
     - docker
   pre:
     - hash meteor 2>/dev/null || curl https://install.meteor.com | /bin/sh
+  environment:
+    COVERALLS_REPO_TOKEN: COVERALL_REPO_TOKEN
+    COVERALLS_PARALLEL: COVERALL_PARALLEL
+
 
 dependencies:
   cache_directories:
@@ -48,3 +52,7 @@ deployment:
       - docker push $DOCKER_NAMESPACE/base:latest
       - docker push $DOCKER_NAMESPACE/reaction:$CIRCLE_BUILD_NUM
       - docker push $DOCKER_NAMESPACE/reaction:latest
+
+  notify:
+    webhooks:
+      - url: https://coveralls.io/webhook?repo_token=COVERALL_REPO_TOKEN
