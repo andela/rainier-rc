@@ -11,6 +11,7 @@ dependencies:
     - "~/.meteor"
     - "~/docker"
   override:
+    - mkdir $HOME/RAINIER-RC
     - cd $HOME/RAINIER-RC
     - .reaction/scripts/clone-packages.sh
     - .reaction/docker/scripts/plugin-loader.sh
@@ -24,7 +25,7 @@ test:
 
 deployment:
   prequel:
-    branch: development
+    branch: chore/152077733/circle-build-pass
     commands:
       - DOCKER_NAMESPACE=${DOCKER_NAMESPACE:-reactioncommerce}
       - docker tag reactioncommerce/base:latest $DOCKER_NAMESPACE/base:devel
