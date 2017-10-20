@@ -24,7 +24,7 @@ test:
 
 deployment:
   prequel:
-    branch: development
+    branch: chore/152077733/circleci-build-pass
     commands:
       - DOCKER_NAMESPACE=${DOCKER_NAMESPACE:-reactioncommerce}
       - docker tag reactioncommerce/base:latest $DOCKER_NAMESPACE/base:devel
