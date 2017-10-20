@@ -11,20 +11,20 @@ dependencies:
     - "~/.meteor"
     - "~/docker"
   override:
-    - cd $HOME/reaction
+    - cd $HOME/RAINIER-RC
     - .reaction/scripts/clone-packages.sh
     - .reaction/docker/scripts/plugin-loader.sh
 
 test:
   override:
-    - cd $HOME/reaction
+    - cd $HOME/RAINIER-RC
     - meteor npm install
     - SERVER_TEST_REPORTER="dot" meteor test --once --full-app --headless --driver-package dispatch:mocha
     - .reaction/docker/scripts/ci-build.sh
 
 deployment:
   prequel:
-    branch: chore/152077733/circleci-build-pass
+    branch: development
     commands:
       - DOCKER_NAMESPACE=${DOCKER_NAMESPACE:-reactioncommerce}
       - docker tag reactioncommerce/base:latest $DOCKER_NAMESPACE/base:devel
