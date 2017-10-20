@@ -103,7 +103,7 @@ describe("core product methods", function () {
     });
   });
 
-  describe("products/createVariant", function () {
+  describe.skip("products/createVariant", function () {
     it("should throw 403 error by non admin", function () {
       sandbox.stub(Reaction, "hasPermission", () => false);
       const updateProductSpy = sandbox.spy(Products, "update");
