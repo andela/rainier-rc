@@ -33,12 +33,6 @@ Template.CoreNavigationBar.helpers({
       component: FlatButton,
       icon: "fa fa-search",
       kind: "flat"
-      // onClick() {
-      //   Blaze.renderWithData(Template.searchModal, {
-      //   }, $("body").get(0));
-      //   $("body").css("overflow-y", "hidden");
-      //   $("#search-input").focus();
-      // }
     };
   },
   TourButtonComponent() {
