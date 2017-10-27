@@ -1,6 +1,7 @@
 import { FlatButton } from "/imports/plugins/core/ui/client/components";
 import { Reaction } from "/client/api";
 import { Tags } from "/lib/collections";
+import { takeTour } from "/imports/plugins/included/tour/takeTour";
 
 Template.CoreNavigationBar.onCreated(function () {
   this.state = new ReactiveDict();
@@ -40,6 +41,16 @@ Template.CoreNavigationBar.helpers({
       // }
     };
   },
+  TourButtonComponent() {
+    return {
+      component: FlatButton,
+      kind: "flat",
+      label: "Tour",
+      onClick() {
+        takeTour();
+      }
+    };
+  },
   onMenuButtonClick() {
     const instance = Template.instance();
     return () => {
@@ -70,6 +81,13 @@ Template.CoreNavigationBar.helpers({
         // Register the callback
         instance.toggleMenuCallback = callback;
       }
+    };
+  },
+  staticPagesMenu() {
+    return {
+      component: FlatButton,
+      kind: "flat",
+      label: "Pages"
     };
   }
 });
