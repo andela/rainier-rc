@@ -7,10 +7,7 @@ const userTour = [
     intro: `<h2>Welcome to <strong>Reaction Commerce</strong></h2>
     <hr>
     <div class="tourcontainer">
-      <strong>Reaction Commerce</strong> is a modern ecommerce platform that 
-      exposes quality products or services from trusted vendors to customers while allowing
-      for smooth shopping experience and payments processing.<br><br>
-      This brief tour will guide you through some features of the platform.
+      This brief tour will guide you through some of the features on the platform.
     </div>`
   },
   {
@@ -18,40 +15,31 @@ const userTour = [
     intro: `<h2>Products</h2>
     <hr>
     <div>
-      All available products are displayed in a grid here. 
+      Products are displayed in grids here. 
     </div>`
   },
   {
     element: ".search",
-    intro: `<h2>Search</h2>
+    intro: `<h2>Product Search</h2>
     <hr>
     <div class="tourcontainer">
-      Perform intuitive search here, discover products that interest you, while taking
-      advatage of the following capabilities:
-      <ol>
-        <li>view result as you type in your search</li>
-        <li>Filter products search results</li>
-        <li>Sort products search results based on the product sales</li>
-      </ol>
+      Perform intuitive search here and discover products that interest you
     </div>`
   },
   {
     element: ".cart",
-    intro: `<h2>Cart</h2>
+    intro: `<h2>Shopping Cart</h2>
     <hr>
     <div class="tourcontainer">
-      This is your cart which shows you the amount of items you have selected for purchase.<br>
-      Click on the cart icon to cash out. <br>    
+      This is your cart which shows you the amount of items you have selected for purchase.  
     </div>`
   },
   {
     element: ".languages",
-    intro: `<h2>Languages</h2>
+    intro: `<h2>Language Support</h2>
     <hr>
     <div class="tourcontainer">
-      Select your preferred language here. This option was provisioned because we believe that
-      language should never be a barrier to helping our customers achieve a best in class 
-      shopping or selling experience.
+      Select your preferred language here.
     </div>`
   },
   {
@@ -59,10 +47,7 @@ const userTour = [
     intro: `<h2>Account Options</h2>
     <hr>
     <div class="tourcontainer">
-      Register or signin here when you finish shopping and want to checkout. It's short, its
-      straight forward:<br>
-      click on this Icon to reveal a dropdown where you can enter needed details to register
-      or login.
+      Register, signin, or signout here.
     </div>`
   },
   {
