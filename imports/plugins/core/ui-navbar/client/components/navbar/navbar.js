@@ -1,6 +1,7 @@
 import { FlatButton } from "/imports/plugins/core/ui/client/components";
 import { Reaction } from "/client/api";
 import { Tags } from "/lib/collections";
+import { takeTour } from "/imports/plugins/included/tour/takeTour";
 
 Template.CoreNavigationBar.onCreated(function () {
   this.state = new ReactiveDict();
@@ -32,12 +33,16 @@ Template.CoreNavigationBar.helpers({
       component: FlatButton,
       icon: "fa fa-search",
       kind: "flat"
-      // onClick() {
-      //   Blaze.renderWithData(Template.searchModal, {
-      //   }, $("body").get(0));
-      //   $("body").css("overflow-y", "hidden");
-      //   $("#search-input").focus();
-      // }
+    };
+  },
+  TourButtonComponent() {
+    return {
+      component: FlatButton,
+      kind: "flat",
+      label: "Tour",
+      onClick() {
+        takeTour();
+      }
     };
   },
   onMenuButtonClick() {
