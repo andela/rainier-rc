@@ -40,3 +40,4 @@ imports/plugins/custom/*
 
 .reaction/config.json
 package-lock.json
+.env
