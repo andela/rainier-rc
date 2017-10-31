@@ -12,10 +12,10 @@ const userTour = [
   },
   {
     element: ".product-grid-list",
-    intro: `<h2>Products</h2>
+    intro: `<h2>Products Grid</h2>
     <hr>
     <div>
-      Products are displayed in grids here. 
+      Products are displayed in grids here.
     </div>`
   },
   {
@@ -31,7 +31,7 @@ const userTour = [
     intro: `<h2>Shopping Cart</h2>
     <hr>
     <div class="tourcontainer">
-      This is your cart which shows you the amount of items you have selected for purchase.  
+      This is your cart which shows you the amount of items you have selected for purchase.
     </div>`
   },
   {
@@ -44,7 +44,7 @@ const userTour = [
   },
   {
     element: ".accounts",
-    intro: `<h2>Account Options</h2>
+    intro: `<h2>User Account Options</h2>
     <hr>
     <div class="tourcontainer">
       Register, signin, or signout here.
@@ -67,7 +67,7 @@ const vendorTour = [
     </div>`
   },
   {
-    element: ".product-grid-list",    
+    element: ".product-grid-list",
     intro: `<h2>Products</h2>
     <hr>
     <div class="tourcontainer">
