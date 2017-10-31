@@ -74,7 +74,6 @@ Meteor.methods({
     if (!Reaction.hasPermission("orders")) {
       throw new Meteor.Error(403, "Access Denied");
     }
-
     if (order) {
       Orders.update({
         "_id": order._id,
@@ -92,6 +91,26 @@ Meteor.methods({
 
       const result = Meteor.call("workflow/pushItemWorkflow", "coreOrderItemWorkflow/packed", order, itemIds);
       if (result === 1) {
+        if (packed) {
+          const emailOption = {
+            to: order.email,
+            from: "RAINIER-RC",
+            subject: "Packed Order",
+            html: `<div style="margin: 0 auto; padding: 0 auto;">
+            <h1 style="font-family: 'PT Serif', serif;color:#000">RAINIER-RC</h1>
+            <hr style="background-color:#2979FF; height:3px;"/>
+            <h2 style="color:#2979FF;
+            font-family: 'Playfair Display', serif;">Order Status</h2>
+            <p>Hi ${order.shipping[0].address.fullName},</p>
+            <p>Thank you for Shopping on Rainier Reaction Commerce. The best place to find all you want</p>
+            <p>Your order of ${order.items.length} item(s) has been packed. It will be delivered to you shortly</p>
+            <p>Product Id: ${order.items[0].productId}</p>
+            <p>The Rainier Team</p>
+            <p>235 Ikorodu Road, Ilupeju Lagos</p>
+            </div>`
+          };
+          Reaction.Email.send(emailOption);
+        }
         return Orders.update({
           "_id": order._id,
           "shipping._id": shipment._id
@@ -431,14 +450,35 @@ Meteor.methods({
     const tpl = `orders/${order.workflow.status}`;
     SSR.compileTemplate(tpl, Reaction.Email.getTemplate(tpl));
 
-    Reaction.Email.send({
-      to: order.email,
-      from: `${shop.name} <${shop.emails[0].address}>`,
-      subject: `Your order is confirmed`,
-      // subject: `Order update from ${shop.name}`,
-      html: SSR.render(tpl,  dataForOrderEmail)
-    });
+    if (!order.shipping[0].tracking) {
+      Reaction.Email.send({
+        to: order.email,
+        from: "RAINIER-RC",
+        subject: "Your order is confirmed",
+        // subject: `Order update from ${shop.name}`,
+        html: SSR.render(tpl,  dataForOrderEmail)
+      });
+    }
 
+    if (order.shipping[0].tracking) {
+      const deliveredOption = {
+        to: order.email,
+        from: "RAINIER-RC",
+        subject: "Delivered Order",
+        html: `<div style="margin: 0 auto; padding: 0 auto;">
+        <h1 style="font-family: 'PT Serif', serif;color:#000">RAINIER-RC</h1>
+        <hr style="background-color:#2979FF; height:3px;"/>
+        <h2 style="color:#2979FF;
+        font-family: 'Playfair Display', serif;">Order Status</h2>
+        <p>Hi ${order.shipping[0].address.fullName},</p>
+        <p>Thank you for Shopping on Rainier Reaction Commerce. The best place to find all you want</p>
+        <p>Your order ${(order.items[0].productId)} has been delivered.</p>
+        <p>The Rainier Team</p>
+        <p>235 Ikorodu Road, Ilupeju Lagos</p>
+        </div>`
+      };
+      Reaction.Email.send(deliveredOption);
+    }
     return true;
   },
 
