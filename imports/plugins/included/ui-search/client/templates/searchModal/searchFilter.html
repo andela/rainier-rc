@@ -1,0 +1,75 @@
+<template name="sortByRange">
+  <div class="sorts" id="sortByRange">
+      <strong style="color: black ">Sort Product By:&nbsp;</strong>
+      <select id="sort-value">
+          <option value="null"><strong>Price</strong></option>
+          <option value="ASC"><strong>Lowest price</strong></option>
+          <option value="DESC"><strong>Highest price</strong></option>
+      </select>
+  </div>
+</template>
+
+<template name="sortByVendor">
+  <div class="sorts" id="sortByVendor">
+      <strong style="color: black ">Order Alphabetical:&nbsp;</strong>
+      <select id="sort-vendor">
+          <option value="null"><strong>All</strong></option>
+          <option value="ASC"><strong>A - Z</strong></option>
+          <option value="DESC"><strong>Z - A</strong></option>
+      </select>
+  </div>
+</template>
+
+<template name="searchFilter">
+	<div class="hidden" id="searchFilter">
+		<div class="container customContainer">
+			<div class="row">
+
+				<div class="col-md-4">
+					<label class="transform">Price</label>
+					<div class="rui select">
+						<select id="filter-by-price">
+              <option value="null" selected disabled>Filter by price</option>
+              <option value="all">All prices</option>
+              <option value="0-10">below - ₦10</option>
+              <option value="10-50">₦10 - ₦50</option>
+              <option value="50-100">₦50 - ₦100</option>
+              <option value="100-500">₦100 - ₦500</option>
+              <option value="500-1000">₦500 - ₦1000</option>
+              <option value="1000-10000">₦1000 - ₦10000</option>
+              <option value="10000-100000">₦10000 - ₦100000</option>
+              <option value="100000-1000000">₦100000 - ₦1000000</option>
+              <option value="100000-10000000000">₦100000 - above</option>
+            </select>
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<label class="transform">Vendor</label>
+					<div class="rui select">
+						<select id="filter-by-brand">
+              <option value="null" selected disabled>Filter by vendor</option>
+              <option value="all">All vendors</option>
+               {{#each brand in getBrands productSearchResults }}
+              <option value="{{brand}}">{{brand}}</option>
+              {{/each}}
+            </select>
+					</div>
+        </div>
+
+        <div class="col-md-4">
+          <label class="transform">Latest</label>
+          <div class="rui select">
+            <select id="filter-by-latest">
+              <option value="null" selected disabled>Sort by Latest</option>
+              <option value="all">All</option>
+              <option value="new">New</option>
+              <option value="old">Old</option>
+            </select>
+          </div>
+        </div>
+
+			</div>
+		</div>
+	</div>
+</template>

@@ -1,0 +1,1 @@
+Template.rainierProducts.replaces("products");

@@ -95,3 +95,7 @@ practicalmeteor:sinon
 
 
 # Custom Packages
+
+nimble:restivus
+mizzao:autocomplete
+pauldowman:dotenv
