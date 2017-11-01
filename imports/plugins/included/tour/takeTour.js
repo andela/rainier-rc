@@ -15,11 +15,7 @@ const userTour = [
     intro: `<h2>Products Grid</h2>
     <hr>
     <div>
-<<<<<<< HEAD
       Products are displayed in grids here.
-=======
-      Products are displayed in grids here. 
->>>>>>> 80e3a40b9f8ffa9b78e4c95efeeb9dbde59e13a3
     </div>`
   },
   {
@@ -35,11 +31,7 @@ const userTour = [
     intro: `<h2>Shopping Cart</h2>
     <hr>
     <div class="tourcontainer">
-<<<<<<< HEAD
       This is your cart which shows you the amount of items you have selected for purchase.
-=======
-      This is your cart which shows you the amount of items you have selected for purchase.  
->>>>>>> 80e3a40b9f8ffa9b78e4c95efeeb9dbde59e13a3
     </div>`
   },
   {
@@ -75,11 +67,7 @@ const vendorTour = [
     </div>`
   },
   {
-<<<<<<< HEAD
     element: ".product-grid-list",
-=======
-    element: ".product-grid-list",    
->>>>>>> 80e3a40b9f8ffa9b78e4c95efeeb9dbde59e13a3
     intro: `<h2>Products</h2>
     <hr>
     <div class="tourcontainer">
