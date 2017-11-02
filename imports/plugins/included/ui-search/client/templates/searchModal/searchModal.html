@@ -8,11 +8,14 @@
 
       {{> searchInput }}
 
+      {{> searchFilter productSearchResults=productSearchResults}}
+
       {{> searchTypeToggle }}
 
       {{> productSearchTags tagSearchResults=tagSearchResults }}
 
     </div>
+    <p></p>
 
     {{> searchResults productSearchResults=productSearchResults orderSearchResults=orderSearchResults accountSearchResults=accountSearchResults orderTable=orderTable accountTable=accountTable }}
 
