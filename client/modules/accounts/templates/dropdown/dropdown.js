@@ -69,3 +69,16 @@ Template.loginDropdown.events({
     template.$(".dropdown-toggle").dropdown("toggle");
   }
 });
+
+// vendor or admin getting started (onboarding)
+Template.accountsDropdownApps.onRendered(function () {
+  if (Reaction.hasAdminAccess()) {
+    $("#onboarding").removeClass("onboarding");
+  }
+});
+Template.accountsDropdownApps.events({
+  "click #dropdown-apps-onboarding": function (event) {
+    event.preventDefault();
+    Reaction.Router.go("/reaction/get-started/");
+  }
+});

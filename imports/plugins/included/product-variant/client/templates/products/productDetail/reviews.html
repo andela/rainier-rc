@@ -1,0 +1,48 @@
+<template name="productReview">
+    {{rating}}
+    <div id="reviews">
+      <h3>Submit a review</h3>
+      <div>
+        <h5>Rating:</h5>
+        {{> starsRating mutable=true size=20}}
+      </div>
+      <div id="comment-box">
+        <h5>Comment:</h5>
+        <textarea id="comment" placeholder="Please write your comment here"></textarea>
+        <button type="submit" id="send" class="btn btn-success pull-right">Submit Review</button>
+      </div>
+    </div>
+  </template>
+
+  <template name="showReviews">
+    <div class="userreview">
+      <h3>Product Reviews</h3>
+      {{#each review in reviews}}
+        <div>
+          <b> {{review.username}} </b>
+        </div>
+        <div>
+        {{> starsRating rating=review.rating size=20}}
+        </div>
+        <div>
+        {{review.comment}}
+        </div>
+        <br>
+      {{/each}}
+    </div>
+  </template>
+
+  <template name="showTweets">
+    <div class="tweets">
+      <h3>Tweets about this product</h3>
+      {{#each tweets in tweeter}}
+        <div>
+          <b> @{{tweets.name}} </b>
+        </div>
+        <div>
+          {{tweets.text}}
+        </div>
+        <br>
+      {{/each}}
+    </div>
+  </template>
