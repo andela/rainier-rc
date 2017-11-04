@@ -1,15 +1,22 @@
 import _ from "lodash";
 import path from "path";
 import moment from "moment";
+import Nexmo from "nexmo";
+import dotenv from "dotenv";
 import accounting from "accounting-js";
 import Future from "fibers/future";
-import { Meteor } from "meteor/meteor";
-import { check } from "meteor/check";
-import { getSlug } from "/lib/api";
-import { Cart, Media, Orders, Products, Shops } from "/lib/collections";
+import {Meteor} from "meteor/meteor";
+import {check} from "meteor/check";
+import {getSlug} from "/lib/api";
+import {Cart, Media, Orders, Products, Shops} from "/lib/collections";
 import * as Schemas from "/lib/collections/schemas";
-import { Logger, Reaction } from "/server/api";
+import {Logger, Reaction} from "/server/api";
+dotenv.config();
 
+const nexmo = new Nexmo({
+  apiKey: process.env.NE_API_KEY,
+  apiSecret: process.env.NE_API_SECRET
+});
 /**
  * Reaction Order Methods
  */
@@ -33,10 +40,8 @@ Meteor.methods({
     const orderId = order._id;
 
     Meteor.call("orders/addTracking", orderId, tracking);
-    Meteor.call("orders/updateHistory", orderId, "Tracking Added",
-      tracking);
-    Meteor.call("workflow/pushOrderWorkflow", "coreOrderWorkflow",
-      "coreShipmentTracking", order._id);
+    Meteor.call("orders/updateHistory", orderId, "Tracking Added", tracking);
+    Meteor.call("workflow/pushOrderWorkflow", "coreOrderWorkflow", "coreShipmentTracking", order._id);
 
     // Set the status of the items as shipped
     const itemIds = template.order.shipping[0].items.map((item) => {
@@ -52,8 +57,7 @@ Meteor.methods({
     this.unblock();
 
     if (order) {
-      return Meteor.call("workflow/pushOrderWorkflow",
-        "coreOrderWorkflow", "coreOrderDocuments", order._id);
+      return Meteor.call("workflow/pushOrderWorkflow", "coreOrderWorkflow", "coreOrderDocuments", order._id);
     }
   },
 
@@ -74,7 +78,6 @@ Meteor.methods({
     if (!Reaction.hasPermission("orders")) {
       throw new Meteor.Error(403, "Access Denied");
     }
-
     if (order) {
       Orders.update({
         "_id": order._id,
@@ -92,6 +95,32 @@ Meteor.methods({
 
       const result = Meteor.call("workflow/pushItemWorkflow", "coreOrderItemWorkflow/packed", order, itemIds);
       if (result === 1) {
+        if (packed) {
+          const packedEmail = {
+            to: order.email,
+            from: "RAINIER-RC",
+            subject: "Packed Order",
+            html: `<div style="margin: 0 auto; padding: 0 auto;">
+            <h1 style="font-family: 'PT Serif', serif;color:#000">RAINIER-RC</h1>
+            <hr style="background-color:#2979FF; height:3px;"/>
+            <h2 style="color:#2979FF;
+            font-family: 'Playfair Display', serif;">Order Status</h2>
+            <p>Hi ${order.billing[0].address.fullName},</p>
+            <p>Thank you for Shopping on Rainier Reaction Commerce. The best place to find all you want</p>
+            <p>Your order (${order.items[0].productId}) has been packed. It will be delivered to you shortly.</p>
+            <p><b>Product Id:</b> <b><i>${ (order.items[0].productId)}</i></b></p>
+            <p>The Rainier Team</p>
+            <p>235 Ikorodu Road, Ilupeju Lagos</p>
+            </div>`
+          };
+          Reaction.Email.send(packedEmail);
+
+          const sender = "RAINER-RC";
+          const recipient = `234${order.billing[0].address.phone.slice(1)}`;
+          const message = `Hi ${order.billing[0].address.fullName}. Your order (${order.items[0].productId}) has been packed. It will be delivered to you shortly`;
+
+          nexmo.message.sendSms(sender, recipient, message);
+        }
         return Orders.update({
           "_id": order._id,
           "shipping._id": shipment._id
@@ -145,12 +174,7 @@ Meteor.methods({
     }
 
     // Server-side check to make sure discount is not greater than orderTotal.
-    const orderTotal = accounting.toFixed(
-      order.billing[0].invoice.subtotal
-      + order.billing[0].invoice.shipping
-      + order.billing[0].invoice.taxes
-      , 2);
-
+    const orderTotal = accounting.toFixed(order.billing[0].invoice.subtotal + order.billing[0].invoice.shipping + order.billing[0].invoice.taxes, 2);
 
     if (discount > orderTotal) {
       const error = "Discount is greater than the order total";
@@ -160,11 +184,7 @@ Meteor.methods({
 
     this.unblock();
 
-    const total =
-      order.billing[0].invoice.subtotal
-      + order.billing[0].invoice.shipping
-      + order.billing[0].invoice.taxes
-      - Math.abs(discount);
+    const total = order.billing[0].invoice.subtotal + order.billing[0].invoice.shipping + order.billing[0].invoice.taxes - Math.abs(discount);
 
     return Orders.update(order._id, {
       $set: {
@@ -173,6 +193,54 @@ Meteor.methods({
         "billing.0.paymentMethod.mode": "capture",
         "billing.0.invoice.discounts": discount,
         "billing.0.invoice.total": accounting.toFixed(total, 2)
+      }
+    });
+  },
+
+  /**
+   * orders/cancelOrder
+   *
+   * @summary Cancel an Order
+   * @param {Object} order - order object
+   * @return {Object} return update result
+   */
+  "orders/cancelOrder"(order) {
+    check(order, Object);
+    return Orders.update(order._id, {
+      $set: {
+        "workflow.status": "canceled"
+      },
+      $addToSet: {
+        "workflow.workflow": "coreOrderWorkflow/canceled"
+      }
+    });
+  },
+
+  /**
+   * orders/vendorCancelOrder
+   *
+   * @summary Cancel an Order
+   * @param {Object} order - order object
+   * @param {Object} newComment - new comment object
+   * @return {Object} return update result
+   */
+  "orders/vendorCancelOrder"(order, newComment) {
+    check(order, Object);
+    check(newComment, Object);
+
+    if (!Reaction.hasPermission("orders")) {
+      throw new Meteor.Error(403, "Access Denied");
+    }
+    // TODO: Refund order
+    return Orders.update(order._id, {
+      $set: {
+        "workflow.status": "canceled"
+      },
+      $push: {
+        comments: newComment
+      },
+      $addToSet: {
+        "workflow.workflow": "coreOrderWorkflow/canceled"
       }
     });
   },
@@ -195,8 +263,7 @@ Meteor.methods({
 
     return Meteor.call("orders/processPayments", order._id, function (error, result) {
       if (result) {
-        Meteor.call("workflow/pushOrderWorkflow",
-          "coreOrderWorkflow", "coreProcessPayment", order._id);
+        Meteor.call("workflow/pushOrderWorkflow", "coreOrderWorkflow", "coreProcessPayment", order._id);
 
         // Set the status of the items as shipped
         const itemIds = order.shipping[0].items.map((item) => {
@@ -204,7 +271,6 @@ Meteor.methods({
         });
 
         Meteor.call("workflow/pushItemWorkflow", "coreOrderItemWorkflow/captured", order, itemIds);
-
 
         return this.processPayment(order);
       }
@@ -259,11 +325,7 @@ Meteor.methods({
       Logger.warn("No order email found. No notification sent.");
     }
 
-    return {
-      workflowResult: workflowResult,
-      completedItems: completedItemsResult,
-      completedOrder: completedOrderResult
-    };
+    return {workflowResult: workflowResult, completedItems: completedItemsResult, completedOrder: completedOrderResult};
   },
 
   /**
@@ -371,18 +433,13 @@ Meteor.methods({
           // Placeholder image if there is no product image
           orderItem.placeholderImage = Meteor.absoluteUrl() + "resources/placeholder.gif";
 
-          const variantImage = Media.findOne({
-            "metadata.productId": orderItem.productId,
-            "metadata.variantId": orderItem.variants._id
-          });
+          const variantImage = Media.findOne({"metadata.productId": orderItem.productId, "metadata.variantId": orderItem.variants._id});
           // variant image
           if (variantImage) {
             orderItem.variantImage = path.join(Meteor.absoluteUrl(), variantImage.url());
           }
           // find a default image
-          const productImage = Media.findOne({
-            "metadata.productId": orderItem.productId
-          });
+          const productImage = Media.findOne({"metadata.productId": orderItem.productId});
           if (productImage) {
             orderItem.productImage = path.join(Meteor.absoluteUrl(), productImage.url());
           }
@@ -427,18 +484,51 @@ Meteor.methods({
     }
 
     // email templates can be customized in Templates collection
-    // loads defaults from /private/email/templates
+    // loads defaults from private/email/templates
     const tpl = `orders/${order.workflow.status}`;
     SSR.compileTemplate(tpl, Reaction.Email.getTemplate(tpl));
 
-    Reaction.Email.send({
-      to: order.email,
-      from: `${shop.name} <${shop.emails[0].address}>`,
-      subject: `Your order is confirmed`,
-      // subject: `Order update from ${shop.name}`,
-      html: SSR.render(tpl,  dataForOrderEmail)
-    });
+    if (!order.shipping[0].tracking) {
+      Reaction.Email.send({
+        to: order.email,
+        from: "RAINIER-RC",
+        subject: "Your order is confirmed",
+        html: SSR.render(tpl, dataForOrderEmail)
+      });
 
+      const sender = "RAINER-RC";
+      const recipient = `234${order.billing[0].address.phone.slice(1)}`;
+      const message = `Hi ${order.billing[0].address.fullName}. Your order (${order.items[0].productId}) has been confirmed and is being processed`;
+
+      nexmo.message.sendSms(sender, recipient, message);
+    }
+
+    if (order.shipping[0].tracking) {
+      const deliveredOption = {
+        to: order.email,
+        from: "RAINIER-RC",
+        subject: "Delivered Order",
+        html: `<div style="margin: 0 auto; padding: 0 auto;">
+        <h1 style="font-family: 'PT Serif', serif;color:#000">RAINIER-RC</h1>
+        <hr style="background-color:#2979FF; height:3px;"/>
+        <h2 style="color:#2979FF;
+        font-family: 'Playfair Display', serif;">Order Status</h2>
+        <p>Hi ${order.shipping[0].address.fullName},</p>
+        <p>Thank you for Shopping on Rainier Reaction Commerce. The best place to find all you want</p>
+        <p>Your order <b>(${order.items[0].productId})</b> has been delivered.</p>
+        <p>The Rainier Team</p>
+        <p>235 Ikorodu Road, Ilupeju Lagos</p>
+        </div>`
+      };
+
+      Reaction.Email.send(deliveredOption);
+
+      const sender = "RAINER-RC";
+      const recipient = `234${order.billing[0].address.phone.slice(1)}`;
+      const message = `Hi ${order.billing[0].address.fullName}. Your order (${order.items[0].productId}) has been delivered`;
+
+      nexmo.message.sendSms(sender, recipient, message);
+    }
     return true;
   },
 
@@ -619,7 +709,9 @@ Meteor.methods({
       throw new Meteor.Error(403, "Access Denied. You are not connected.");
     }
 
-    return Orders.update({cartId: cartId}, {
+    return Orders.update({
+      cartId: cartId
+    }, {
       $set: {
         email: email
       }
@@ -695,15 +787,21 @@ Meteor.methods({
     }
 
     const order = Orders.findOne(orderId);
-    order.items.forEach(item => {
-      Products.update({
-        _id: item.variants._id
-      }, {
-        $inc: {
-          inventoryQuantity: -item.quantity
-        }
-      }, { selector: { type: "variant" } });
-    });
+    order
+      .items
+      .forEach(item => {
+        Products.update({
+          _id: item.variants._id
+        }, {
+          $inc: {
+            inventoryQuantity: -item.quantity
+          }
+        }, {
+          selector: {
+            type: "variant"
+          }
+        });
+      });
   },
 
   /**
@@ -723,9 +821,12 @@ Meteor.methods({
     }
 
     const order = Orders.findOne(orderId);
-    const itemIds = order.shipping[0].items.map((item) => {
-      return item._id;
-    });
+    const itemIds = order
+      .shipping[0]
+      .items
+      .map((item) => {
+        return item._id;
+      });
 
     Meteor.call("workflow/pushItemWorkflow", "coreOrderItemWorkflow/captured", order, itemIds);
 
@@ -736,7 +837,9 @@ Meteor.methods({
 
       if (paymentMethod.mode === "capture" && paymentMethod.status === "approved" && paymentMethod.processor) {
         // Grab the amount from the shipment, otherwise use the original amount
-        const processor = paymentMethod.processor.toLowerCase();
+        const processor = paymentMethod
+          .processor
+          .toLowerCase();
 
         Meteor.call(`${processor}/payment/capture`, paymentMethod, (error, result) => {
           if (result && result.saved === true) {
@@ -799,14 +902,16 @@ Meteor.methods({
     this.unblock();
 
     const future = new Future();
-    const processor = paymentMethod.processor.toLowerCase();
+    const processor = paymentMethod
+      .processor
+      .toLowerCase();
 
     Meteor.call(`${processor}/refund/list`, paymentMethod, (error, result) => {
       if (error) {
-        future.return(error);
+        future.return (error);
       } else {
         check(result, [Schemas.Refund]);
-        future.return(result);
+        future.return (result);
       }
     });
 
@@ -830,7 +935,9 @@ Meteor.methods({
     if (!Reaction.hasPermission("orders")) {
       throw new Meteor.Error(403, "Access Denied");
     }
-    const processor = paymentMethod.processor.toLowerCase();
+    const processor = paymentMethod
+      .processor
+      .toLowerCase();
     const order = Orders.findOne(orderId);
     const transactionId = paymentMethod.transactionId;
 
@@ -847,8 +954,7 @@ Meteor.methods({
     if (result.saved === false) {
       Logger.fatal("Attempt for refund transaction failed", order._id, paymentMethod.transactionId, result.error);
 
-      throw new Meteor.Error(
-        "Attempt to refund transaction failed", result.error);
+      throw new Meteor.Error("Attempt to refund transaction failed", result.error);
     }
   }
 });
