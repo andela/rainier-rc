@@ -7,3 +7,7 @@ Meteor.publish("staticPages", function () {
   }
   return StaticPages.find({});
 });
+
+Meteor.publish("viewPages", function () {
+  return StaticPages.find({});
+});
