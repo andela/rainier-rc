@@ -9,12 +9,12 @@ import { i18next } from "/client/api";
  */
 Template.dashboardOrdersList.helpers({
   orderStatus() {
-    if (this.workflow.status === "coreOrderCompleted") {
-      return i18next.t("order.completed");
+    if (this.workflow.status === "coreOrderCompleted" || this.workflow.status === "coreOrderWorkflow/completed") {
+      return "Completed";
     } else if (this.workflow.status === "canceled") {
-      return i18next.t("Canceled");
+      return "Canceled";
     }
-    return i18next.t("order.processing");
+    return "Processing";
   },
   orders(data) {
     if (data.hash.data) {
@@ -36,5 +36,8 @@ Template.dashboardOrdersList.helpers({
   shopName() {
     const shop = Shops.findOne(this.shopId);
     return shop !== null ? shop.name : void 0;
+  },
+  hasComment() {
+    return this.comments.length > 0;
   }
 });
