@@ -2,13 +2,14 @@ import { Reaction } from "/client/api";
 import { Template } from "meteor/templating";
 import { StaticPages } from "/lib/collections";
 
-import "./footer.html";
 
-Template.rainierFooter.onCreated(function () {
-  Meteor.subscribe("staticPages");
+Template.layoutFooter.onCreated(function () {
+  this.autorun(() => {
+    this.subscribe("staticPages");
+  });
 });
 
-Template.rainierFooter.helpers({
+Template.layoutFooter.helpers({
   staticPages() {
     return StaticPages.find({shopId: Reaction.shopId}).fetch();
   },
