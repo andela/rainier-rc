@@ -108,14 +108,13 @@ function confirmTransfer(transaction, recipient) {
 
 
 const getPaystackSettings = () => {
-  const paystack = Packages.findOne({
+  Packages.findOne({
     name: "paystack",
     shopId: Reaction.getShopId()
   });
-
   return {
-    public: "pk_test_fdb8f5d097ae34d157c37dade5a73e773a2e59c2",
-    secret: "sk_test_d1fdf3835df9986fb5c7f1500c520a470b02bd72"
+    public: Meteor.settings.public.publicKey,
+    secret: Meteor.settings.public.secretKey
   };
 };
 
