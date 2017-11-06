@@ -41,7 +41,7 @@ Template.rainierCreateStaticPages.events({
     const createdAt = new Date();
     if (_id) {
       return Meteor.call(
-        "editPage", _id, title, category, slug, content, shopId, (error) => {
+        "editPage", _id, title, slug, category, content, shopId, (error) => {
           if (error) {
             Alerts.toast(error.message, "error", {
               autoHide: 1000
