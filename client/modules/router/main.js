@@ -302,6 +302,16 @@ Router.isActiveClassName = (routeName) => {
   return routeDef === routeName ? "active" : "";
 };
 
+// Route for static pages
+Router.route("/pages/:slug", {
+  action(params) {
+    ReactionLayout({
+      template: "staticPageDisplay",
+      slug: params.slug
+    });
+  }
+});
+
 // Register Global Route Hooks
 Meteor.startup(() => {
   Router.Hooks.onEnter(checkRouterPermissions);

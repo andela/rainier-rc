@@ -1,3 +1,25 @@
+<template name="staticPagesNav">
+  <div class="dropdown" role="menu">
+    <div class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000">
+      <span id="logged-in-display-name"> Info<b class="caret"></b></span>
+    </div>
+    <div class="dropdown-menu" role="menu">
+      <div class="user-accounts-dropdown">
+        <ul class="user-accounts-dropdown-apps">
+          {{#each staticPage in staticPages}}
+            <li class="dropdown-apps-icon">
+              <a href="/pages/{{staticPage.slug}}" id="dropdown-apps-{{staticPage.title}}" title="{{staticPage.title}}">
+                <i class="fa fa-file-text-o"></i>
+                {{staticPage.title}}
+              </a>
+            </li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+  </div>
+</template>
+
 <template name="loginDropdown">
   <div class="dropdown" role="menu">
     {{#if currentUser}}

@@ -1,5 +1,5 @@
 import { Reaction, Logger } from "/client/api";
-import { Tags } from "/lib/collections";
+import { Tags, StaticPages } from "/lib/collections";
 import { Session } from "meteor/session";
 import { Meteor } from "meteor/meteor";
 import { Template } from "meteor/templating";
@@ -110,5 +110,23 @@ Template.accountsDropdownApps.events({
   "click #dropdown-apps-onboarding": function (event) {
     event.preventDefault();
     Reaction.Router.go("/reaction/get-started/");
+  }
+});
+
+
+Template.staticPagesNav.onCreated(function () {
+  this.autorun(() => {
+    this.subscribe("viewPages");
+  });
+});
+
+Template.staticPagesNav.helpers({
+  staticPages() {
+    const instance = Template.instance();
+    if (instance.subscriptionsReady()) {
+      return StaticPages.find({
+        shopId: Reaction.getShopId()
+      });
+    }
   }
 });

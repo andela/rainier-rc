@@ -2,31 +2,30 @@
   <footer class="rainier-footer">
     <div class="container">
       <div class="row">
-        <div class="col-md-3 col-sm-6">
-          <h3 class="rainier-footer-header"><strong>Need Help?</strong></h3>
-          <p><a href="#">Contact Us</a></p>
-          <p><a href="#">How to shop on Reaction</a></p>
-          <p><a href="#">Shipping and Delivery</a></p>
-        </div>
-        <div class="col-md-3 col-sm-6">
-          <h3 class="rainier-footer-header"><strong>Make Money</strong></h3>
-          <p><a href="#">Sell products on Reaction</a></p>
-          <p><a href="#">Become a sales consultant</a></p>
-          <p><a href="#">Advertise on Reaction</a></p>
-        </div>
-        <div class="col-md-3 col-sm-6">
-          <h3 class="rainier-footer-header"><strong>Pages</strong></h3>
-          <p><a href="#">About Us</a></p>
-          <p><a href="#">FAQ</a></p>
-          <p><a href="#">We&apos;re hiring</a></p>
-          <p><a href="#">Terms&amp;Conditions</a></p>
+        <div class="col-md-9 col-sm-12">
+          {{#if staticPagesByCategory}}
+            {{#each category in staticPagesByCategory}}
+              <div class="col-md-4 col-sm-6">
+                <h3 class="rainier-footer-header">
+                  {{#if category.[0].category}}
+                    <strong>{{category.[0].category}}</strong>
+                    {{else}}
+                    <strong>Pages</strong>
+                  {{/if}}
+                </h3>
+                {{#each page in category }}
+                  <p><a href="/pages/{{page.slug}}">{{page.title}}</a></p>
+                {{/each}}
+              </div>
+            {{/each}}
+          {{/if}}
         </div>
         <div class="col-md-3 col-sm-12">
           <h3 class="rainier-footer-header"><strong>Payment</strong></h3>
-          <img src="resources/payment/rc-visa.png" alt="payment-provider" class="payment-icon">
-          <img src="resources/payment/rc-mastercard.png" alt="payment-provider" class="payment-icon">
-          <img src="resources/payment/rc-verve.png" alt="payment-provider" class="payment-icon">
-          <img src="resources/payment/rc-quickteller.png" alt="payment-provider" class="payment-icon">
+          <img src="/resources/payment/rc-visa.png" alt="payment-provider" class="payment-icon">
+          <img src="/resources/payment/rc-mastercard.png" alt="payment-provider" class="payment-icon">
+          <img src="/resources/payment/rc-verve.png" alt="payment-provider" class="payment-icon">
+          <img src="/resources/payment/rc-quickteller.png" alt="payment-provider" class="payment-icon">
         </div>
       </div>
     </div>
