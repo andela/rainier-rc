@@ -224,20 +224,35 @@ Meteor.methods({
    * @param {Object} newComment - new comment object
    * @return {Object} return update result
    */
-  "orders/vendorCancelOrder"(order, newComment) {
+  "orders/vendorCancelOrder"(order, cancelComment) {
     check(order, Object);
-    check(newComment, Object);
+    check(cancelComment, Object);
 
     if (!Reaction.hasPermission("orders")) {
       throw new Meteor.Error(403, "Access Denied");
     }
+    const options = {
+      to: order.email,
+      from: "RAINIER-RC",
+      subject: "Canceled Order",
+      html: `<div>
+      <p>Hi ${order.shipping[0].address.fullName},</p>
+      <p>Your order has been canceled. Please find the details below</p>
+      <strong>
+      <p>Item: ${order.items[0].title}</p>
+      <p style="color:red">Reason: ${cancelComment.body}</p>
+      <p>Thanks for shopping with us!</p>
+      <b><p> RAINIER-RC </p></b>
+      </strong></div>`
+    };
+    Reaction.Email.send(options);
     // TODO: Refund order
     return Orders.update(order._id, {
       $set: {
         "workflow.status": "canceled"
       },
       $push: {
-        comments: newComment
+        comments: cancelComment
       },
       $addToSet: {
         "workflow.workflow": "coreOrderWorkflow/canceled"
@@ -908,10 +923,10 @@ Meteor.methods({
 
     Meteor.call(`${processor}/refund/list`, paymentMethod, (error, result) => {
       if (error) {
-        future.return (error);
+        future.return(error);
       } else {
         check(result, [Schemas.Refund]);
-        future.return (result);
+        future.return(result);
       }
     });
 
@@ -957,52 +972,4 @@ Meteor.methods({
       throw new Meteor.Error("Attempt to refund transaction failed", result.error);
     }
   }
-
-  // "orders/cancelOrder": (order, userType, cancelComment) => {
-  //   check(order, Object);
-  //   check(userType, String);
-  //   check(cancelComment, Match.Maybe(Object));
-
-  //   if (userType === "buyer") {
-  //     return Orders.update(order._id, {
-  //       $set: {
-  //         "workfloe.status": "canceled"
-  //       },
-  //       $addToSet: {
-  //         "workflow.workflow": "coreOrderWorkflow/canceled"
-  //       }
-  //     });
-  //   } else if (userType === "vendor") {
-  //     if (!Reaction.hasPermission("orders")){
-  //       throw new Meteor.Error(403, "Access Denied");
-  //     }
-  //     const options = {
-  //       to: order.email,
-  //       from: "RAINIER-RC",
-  //       subject: "Canceled Order",
-  //       html: `<div>
-  //       <p>Hi ${order.shipping[0].address.fullName},</p>
-  //       <p>Your order has been canceled. Please find the details below</p>
-  //       <strong>
-  //       <p>Item: ${order.items[0].title}</p>
-  //       <p style="color:red">Reason: ${cancelComment.body}</p>
-  //       <p>Thanks for shopping with us!</p>
-  //       <b><p> RAINIER-RC </p></b>
-  //       </strong></div>`
-  //     };
-  //     Reaction.Email.send(options);
-  //     return Orders.update(order._id, {
-  //       $set: {
-  //         "workflow.status": "canceled"
-  //       },
-  //       $push: {
-  //         comments: cancelComment
-  //       },
-  //       $addToSet: {
-  //         "workflow.workflow": "coreOrderWorkflow/canceled"
-  //       }
-  //     });
-  //   }
-  //   throw new Meteor.Error(402, "userType does not exist");
-  // }
 });
