@@ -224,20 +224,35 @@ Meteor.methods({
    * @param {Object} newComment - new comment object
    * @return {Object} return update result
    */
-  "orders/vendorCancelOrder"(order, newComment) {
+  "orders/vendorCancelOrder"(order, cancelComment) {
     check(order, Object);
-    check(newComment, Object);
+    check(cancelComment, Object);
 
     if (!Reaction.hasPermission("orders")) {
       throw new Meteor.Error(403, "Access Denied");
     }
+    const options = {
+      to: order.email,
+      from: "RAINIER-RC",
+      subject: "Canceled Order",
+      html: `<div>
+      <p>Hi ${order.shipping[0].address.fullName},</p>
+      <p>Your order has been canceled. Please find the details below</p>
+      <strong>
+      <p>Item: ${order.items[0].title}</p>
+      <p style="color:red">Reason: ${cancelComment.body}</p>
+      <p>Thanks for shopping with us!</p>
+      <b><p> RAINIER-RC </p></b>
+      </strong></div>`
+    };
+    Reaction.Email.send(options);
     // TODO: Refund order
     return Orders.update(order._id, {
       $set: {
         "workflow.status": "canceled"
       },
       $push: {
-        comments: newComment
+        comments: cancelComment
       },
       $addToSet: {
         "workflow.workflow": "coreOrderWorkflow/canceled"

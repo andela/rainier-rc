@@ -127,5 +127,11 @@ Template.coreOrderShippingTracking.helpers({
     const shipment = order.shipping[0];
 
     return shipment.packed && shipment.tracking;
+  },
+  isCanceled() {
+    const order = Template.instance().order;
+    if (order.workflow.status === "canceled") {
+      return true;
+    }
   }
 });
