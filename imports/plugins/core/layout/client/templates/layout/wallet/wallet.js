@@ -113,8 +113,8 @@ const getPaystackSettings = () => {
     shopId: Reaction.getShopId()
   });
   return {
-    public: Meteor.settings.public.publicKey,
-    secret: Meteor.settings.public.secretKey
+    public: Meteor.settings.public.paystackPublicKey,
+    secret: Meteor.settings.public.paystackSecretKey
   };
 };
 
