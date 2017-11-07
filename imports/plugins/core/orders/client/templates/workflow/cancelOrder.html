@@ -1,0 +1,36 @@
+<template name="coreOrderCancelOrder">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h2 class="panel-title">Cancel Order</h2>
+    </div>
+    {{#if showCancelOrderForm}}
+    <div class="panel-body">
+      <form name="cancelOrderForm">
+        <div class="form-group {{hasError messages.errors.comment}}">
+          <label for="cancel">Reason for Cancellation</label>
+          <div>
+            <select class="form-control cancel-reason" id="cancel-reason" name="comment" required>
+              <option value="suspected fraud">Suspected Fraud</option>
+              <option value="out of stock">Out of Stock</option>
+              <option value="user cancelled">User Cancelled</option>
+              <option value="natural disaster">Natural Disaster</option>
+              <option value="damaged product">Damaged Product</option>
+              <option value="logistics breakdown">Logistics Breakdown</option>
+              <option value="others">Others</option>
+            </select>
+          </div>
+          {{#if showEditor}}
+            <textarea name="comment" class="form-control other-reason" id="other-reason" placeholder="Reason for Cancellation"></textarea>
+          {{/if}}
+          {{#if hasError messages.errors.comment}}
+            <span class="help-block">
+              {{messages.errors.comment.reason}}
+            </span>
+          {{/if}}
+        </div>
+        <button class="btn btn-danger btn-block" type="submit" style="margin-top:10px;" id="cancelOrder" data-event-action="cancelOrder">Cancel Order</button>
+      </form>
+    </div>
+    {{/if}}
+  </div>
+</template>
