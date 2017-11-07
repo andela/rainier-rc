@@ -16,8 +16,6 @@ import "./templates/products/productDetail/productImageGallery.html";
 import "./templates/products/productDetail/productImageGallery.js";
 import "./templates/products/productDetail/social.html";
 import "./templates/products/productDetail/social.js";
-// import "./templates/products/productDetail/reviews.html";
-// import "./templates/products/productDetail/reviews.js";
 
 import "./templates/products/productGrid/content.html";
 import "./templates/products/productGrid/content.js";
