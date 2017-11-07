@@ -923,10 +923,10 @@ Meteor.methods({
 
     Meteor.call(`${processor}/refund/list`, paymentMethod, (error, result) => {
       if (error) {
-        future.return(error);
+        future.return (error);
       } else {
         check(result, [Schemas.Refund]);
-        future.return(result);
+        future.return (result);
       }
     });
 
