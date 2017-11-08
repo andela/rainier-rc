@@ -206,9 +206,57 @@ Meteor.methods({
    */
   "orders/cancelOrder"(order) {
     check(order, Object);
+    // validate order and confirm that order has not been completed
+    const orderDetail = Orders.findOne(order._id);
+    if (orderDetail.workflow.status === "coreOrderCompleted") {
+      throw new Meteor.Error(400, "Order Already Completed");
+    }
+    const orderTotal = orderDetail.billing[0].invoice.total;
+    const refundAmount = orderTotal;
+
+    const transactionDetail = {
+      amount: refundAmount,
+      transactionType: "Credit",
+      from: "Order Refund",
+      date: new Date
+    };
+
+    const options = {
+      to: order.email,
+      from: "RAINIER-RC",
+      subject: "Canceled Order",
+      html: `<div>
+      <p>Hi ${order.shipping[0].address.fullName},</p>
+      <p>Your order has been canceled
+      <strong>
+      <p>Item: ${order.items[0].title}</p>
+      <p>Thanks for shopping with us!</p>
+      <b><p> RAINIER-RC </p></b>
+      </strong></div>`
+    };
+    Reaction.Email.send(options);
+    if (orderDetail.userId &&
+      orderDetail.billing[0].paymentMethod.processor === "Wallet") {
+      return Meteor.call("wallet/transaction", orderDetail.userId, transactionDetail, (error) => {
+        if (error) {
+          throw new Meteor.Error(501, "Unable to Process Refund Try again!");
+        } else {
+          return Orders.update(order._id, {
+            $set: {
+              "workflow.status": "canceled",
+              "refunded": true
+            },
+            $addToSet: {
+              "workflow.workflow": "coreOrderWorkflow/canceled"
+            }
+          });
+        }
+      });
+    }
     return Orders.update(order._id, {
       $set: {
-        "workflow.status": "canceled"
+        "workflow.status": "canceled",
+        "refunded": true
       },
       $addToSet: {
         "workflow.workflow": "coreOrderWorkflow/canceled"
@@ -231,6 +279,24 @@ Meteor.methods({
     if (!Reaction.hasPermission("orders")) {
       throw new Meteor.Error(403, "Access Denied");
     }
+
+    const orderDetail = Orders.findOne(order._id);
+    const orderTotal = orderDetail.billing[0].invoice.total;
+    const shippingCost = orderDetail.billing[0].invoice.shipping;
+    let refundAmount;
+    if (orderDetail.workflow.status === "coreOrderShipped") {
+      refundAmount = orderTotal - shippingCost;
+    } else {
+      refundAmount = orderTotal;
+    }
+
+    const transactionDetail = {
+      amount: refundAmount,
+      transactionType: "Credit",
+      from: "Order Refund",
+      date: new Date
+    };
+
     const options = {
       to: order.email,
       from: "RAINIER-RC",
@@ -246,13 +312,35 @@ Meteor.methods({
       </strong></div>`
     };
     Reaction.Email.send(options);
-    // TODO: Refund order
+
+    if (orderDetail.userId &&
+      orderDetail.billing[0].paymentMethod.processor === "Wallet") {
+      return Meteor.call("wallet/transaction", orderDetail.userId, transactionDetail, (error) => {
+        if (error) {
+          throw new Meteor.Error(501, "Unable to Process Refund Try again!");
+        } else {
+          return Orders.update(order._id, {
+            $set: {
+              "workflow.status": "canceled",
+              "refunded": true
+            },
+            $push: {
+              comment: cancelComment
+            },
+            $addToSet: {
+              "workflow.workflow": "coreOrderWorkflow/canceled"
+            }
+          });
+        }
+      });
+    }
     return Orders.update(order._id, {
       $set: {
-        "workflow.status": "canceled"
+        "workflow.status": "canceled",
+        "refunded": true
       },
       $push: {
-        comments: cancelComment
+        comment: cancelComment
       },
       $addToSet: {
         "workflow.workflow": "coreOrderWorkflow/canceled"

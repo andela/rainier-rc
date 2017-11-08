@@ -3,23 +3,6 @@
     <div class="panel-heading">
       <h2 class="panel-title">Cancel Order</h2>
     </div>
-<<<<<<< HEAD
-    <div class="panel-body">
-      <form>
-        <label for="cancel">Reason for Cancellation</label>
-        <select class="form-control" id="cancel">
-          <option value="fraud">Suspected Fraud</option>
-          <option value="out of stock">Out of Stock</option>
-          <option value="user cancelled">User Cancelled</option>
-          <option value="natural disaster">Natural Disaster</option>
-          <option value="damaged product">Damaged Product</option>
-          <option value="logistics breakdown">Logistics Breakdown</option>
-          <option value="others">Others</option>
-        </select>
-        <button class="btn btn-danger btn-block" type="submit" style="margin-top:10px;">Cancel Order</button>
-      </form>
-    </div>
-=======
     {{#if showCancelOrderForm}}
     <div class="panel-body">
       <form name="cancelOrderForm">
@@ -49,6 +32,5 @@
       </form>
     </div>
     {{/if}}
->>>>>>> 220e7c2cedb15b5f551425e792f86472fba2b1d1
   </div>
 </template>
