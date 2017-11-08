@@ -7,6 +7,7 @@ import "./templates/layout/alerts/reactionAlerts.js";
 import "./templates/layout/createContentMenu/createContentMenu.html";
 import "./templates/layout/createContentMenu/createContentMenu.js";
 import "./templates/layout/footer/footer.html";
+import "./templates/layout/footer/footer.js";
 import "./templates/layout/header/brand.html";
 import "./templates/layout/header/button.html";
 import "./templates/layout/header/header.html";
@@ -17,6 +18,8 @@ import "./templates/layout/notFound/notFound.html";
 import "./templates/layout/notFound/notFound.js";
 import "./templates/layout/notice/unauthorized.html";
 import "./templates/layout/layout.html";
+import "./templates/layout/wallet/wallet.html";
+import "./templates/layout/wallet/wallet.js";
 
 import "./templates/theme/theme.html";
 import "./templates/theme/theme.js";

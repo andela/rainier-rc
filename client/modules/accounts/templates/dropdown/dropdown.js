@@ -1,5 +1,5 @@
 import { Reaction, Logger } from "/client/api";
-import { Tags } from "/lib/collections";
+import { Tags, StaticPages } from "/lib/collections";
 import { Session } from "meteor/session";
 import { Meteor } from "meteor/meteor";
 import { Template } from "meteor/templating";
@@ -67,6 +67,10 @@ Template.loginDropdown.events({
       Reaction.Router.go(route);
     }
     template.$(".dropdown-toggle").dropdown("toggle");
+  },
+  "click #wallet": (event) => {
+    event.preventDefault();
+    FlowRouter.go("/wallet");
   }
 });
 
@@ -80,5 +84,49 @@ Template.accountsDropdownApps.events({
   "click #dropdown-apps-onboarding": function (event) {
     event.preventDefault();
     Reaction.Router.go("/reaction/get-started/");
+  }
+});
+
+// vendor or admin getting started (onboarding)
+Template.accountsDropdownApps.onRendered(function () {
+  if (Reaction.hasAdminAccess()) {
+    $("#onboarding").removeClass("onboarding");
+  }
+});
+Template.accountsDropdownApps.events({
+  "click #dropdown-apps-onboarding": function (event) {
+    event.preventDefault();
+    Reaction.Router.go("/reaction/get-started/");
+  }
+});
+
+// vendor or admin getting started (onboarding)
+Template.accountsDropdownApps.onRendered(function () {
+  if (Reaction.hasAdminAccess()) {
+    $("#onboarding").removeClass("onboarding");
+  }
+});
+Template.accountsDropdownApps.events({
+  "click #dropdown-apps-onboarding": function (event) {
+    event.preventDefault();
+    Reaction.Router.go("/reaction/get-started/");
+  }
+});
+
+
+Template.staticPagesNav.onCreated(function () {
+  this.autorun(() => {
+    this.subscribe("viewPages");
+  });
+});
+
+Template.staticPagesNav.helpers({
+  staticPages() {
+    const instance = Template.instance();
+    if (instance.subscriptionsReady()) {
+      return StaticPages.find({
+        shopId: Reaction.getShopId()
+      });
+    }
   }
 });

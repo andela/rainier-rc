@@ -8,4 +8,16 @@
     {{!-- Use old product detail page --}}
     {{> productDetail }}
   {{/if}}
+
+{{> disqus }}
+</template>
+<template name="disqus">
+    <div id="disqus_thread" class="container-main">
+        {{getDisqus}}
+    </div>
+</template>
+<template name="facebookLike">
+    <div class="container-main">
+
+    </div>
 </template>

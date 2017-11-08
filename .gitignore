@@ -41,3 +41,4 @@ private/custom/*
 .reaction/config.json
 package-lock.json
 .env
+settings/dev.settings.json
