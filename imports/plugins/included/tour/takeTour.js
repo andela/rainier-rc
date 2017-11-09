@@ -15,7 +15,7 @@ const userTour = [
     intro: `<h2>Products Grid</h2>
     <hr>
     <div>
-      Products are displayed in grids here. 
+      Products are displayed in grids here.
     </div>`
   },
   {
@@ -31,7 +31,7 @@ const userTour = [
     intro: `<h2>Shopping Cart</h2>
     <hr>
     <div class="tourcontainer">
-      This is your cart which shows you the amount of items you have selected for purchase.  
+      This is your cart which shows you the amount of items you have selected for purchase.
     </div>`
   },
   {

@@ -181,6 +181,12 @@ Router.initPackageRoutes = () => {
         ReactionLayout(Session.get("INDEX_OPTIONS") || {});
       }
     });
+    shop.route("/wallet", {
+      name: "wallet",
+      action() {
+        ReactionLayout({ template: "wallet"});
+      }
+    });
 
     // get package registry route configurations
     for (const pkg of pkgs) {
@@ -197,9 +203,6 @@ Router.initPackageRoutes = () => {
               layout,
               workflow
             } = registryItem;
-
-            // console.log(registryItem);
-
             // get registry route name
             const name = getRegistryRouteName(pkg.name, registryItem);
 
@@ -244,16 +247,12 @@ Router.initPackageRoutes = () => {
               prefix: "/" + prefix
             });
           }
-
           // todo: look for a cheap way to validate and prevent duplicate additions
           shop.newGroup.route(route.route, route.options);
         }
       }
     } // end package loop
-
-    //
     // initialize the router
-    //
     try {
       Router.initialize();
     } catch (e) {
@@ -302,6 +301,16 @@ Router.isActiveClassName = (routeName) => {
   const routeDef = path.replace(prefix + "/", "");
   return routeDef === routeName ? "active" : "";
 };
+
+// Route for static pages
+Router.route("/pages/:slug", {
+  action(params) {
+    ReactionLayout({
+      template: "staticPageDisplay",
+      slug: params.slug
+    });
+  }
+});
 
 // Register Global Route Hooks
 Meteor.startup(() => {

@@ -80,5 +80,12 @@ Template.CoreNavigationBar.helpers({
         instance.toggleMenuCallback = callback;
       }
     };
+  },
+  staticPagesMenu() {
+    return {
+      component: FlatButton,
+      kind: "flat",
+      label: "Pages"
+    };
   }
 });

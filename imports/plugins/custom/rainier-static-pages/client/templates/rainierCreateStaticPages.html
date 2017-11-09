@@ -1,0 +1,65 @@
+<template name="rainierCreateStaticPages">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-3 visible-md visible-lg">
+        <div class="static-sidebar">
+          {{> staticPagesList}}
+        </div>
+      </div>
+      <div class="col-md-9 padright-20">
+        <div class="col-md-12">
+          <h3 class="col-md-8" id="page-heading">Create New Page</h3>
+          <div class="col-md-4">
+            <input class="btn btn-primary stay-right" id="clear-fields" type="button" value="reset form">
+          </div>
+        </div>
+        <form class="col-sm-12 create-page-form" action="" method="post">
+          <input id="_id" type="text" name="_id" hidden="true">
+          <div class="form-group">
+            <label for="pageCategory">Page Category</label>
+            <input class="form-control" id="category" type="text" name="pageCategory" value="">
+          </div>
+          <div class="form-group">
+            <label for="title">Page Title</label>
+            <input class="form-control" id="title" type="text" name="pageTitle" value="">
+          </div>
+          <div class="form-group">
+            <label for="content">Page Content</label>
+            <textarea class="form-control" id="content" rows="8" name="content"></textarea>
+          </div>
+          <div class="form-group">
+            <input class="form-control btn btn-success" id="submit" type="submit" value="SUBMIT">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</template>
+
+
+<template name="staticPagesList">
+  <div class="rainier-bottom-bordered">
+    <h3 class="center">Your pages</h3>
+  </div>
+  {{#if staticPages}}
+    {{#each staticPage in staticPages}}
+      <div class="col-md-12 pad-20 rainier-bottom-bordered">
+        <div class="col-md-8">
+          <h5>
+            {{staticPage.title}}
+          </h5>
+        </div>
+        <div class="col-md-4 static-controls">
+          <button class="btn-primary edit-page left" data-id="{{staticPage._id}}">
+            <i class="fa fa-pencil edit-page" data-id="{{staticPage._id}}"></i>
+          </button>
+          <button class="btn-danger delete-page right" data-id="{{staticPage._id}}">
+            <i class="fa fa-trash edit-page" data-id="{{staticPage._id}}"></i>
+          </button>
+        </div>
+      </div>
+    {{/each}}
+    {{else}}
+      <h5>No pages yet</h5>
+  {{/if}}
+</template>
