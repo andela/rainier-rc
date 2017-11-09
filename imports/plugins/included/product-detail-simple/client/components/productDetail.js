@@ -269,7 +269,18 @@ class ProductDetail extends Component {
                       {this.digitalDetails()}
                     </div>
                     <div className="col-xs-2">
-                      {this.showUploadProgress()}
+                    <br/>
+                    {this.showUploadProgress()}
+                    {
+                      (this.state.downloadUrl)
+                      ?
+                      (
+                      <a href={this.state.downloadUrl} className ="btn btn-success">
+                          Uploaded file
+                      </a>
+                      )
+                      : ""
+                    }
                     </div>
                 </div>
               </div>
