@@ -96,7 +96,9 @@
     <div class="flex">
 
       {{#if paymentPendingApproval}}
-        <button class="btn btn-info btn-block" type="submit" data-event-action="approveInvoice" data-i18n="order.approveInvoice">Approve</button>
+        {{#unless isCanceled}}
+          <button class="btn btn-info btn-block" type="submit" data-event-action="approveInvoice" data-i18n="order.approveInvoice">Approve</button>
+        {{/unless}}
       {{/if}}
 
       {{#if paymentApproved}}

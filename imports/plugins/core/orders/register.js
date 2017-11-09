@@ -83,6 +83,12 @@ Reaction.registerPackage({
     status: "completed",
     workflow: "coreOrderWorkflow",
     audience: ["dashboard/orders"]
+  }, {
+    template: "coreOrderCanceled",
+    label: "Order Canceled",
+    status: "canceled",
+    workflow: "coreOrderWorkflow",
+    audience: ["dashboard/orders"]
   }, { // Standard Order Fulfillment with shipping
     template: "coreOrderShippingSummary",
     label: "Summary",

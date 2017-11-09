@@ -407,5 +407,12 @@ Template.coreOrderShippingInvoice.helpers({
     }
 
     return false;
+  },
+  isCanceled() {
+    const instance = Template.instance();
+    const order = instance.state.get("order");
+    if (order.workflow.status === "canceled") {
+      return true;
+    }
   }
 });
