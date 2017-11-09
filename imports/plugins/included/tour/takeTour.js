@@ -1,5 +1,7 @@
 import introJs from "intro.js";
 import { Reaction } from "/client/api";
+import { Meteor } from "meteor/meteor";
+import { Accounts } from "/lib/collections";
 
 const tour = introJs.introJs();
 const userTour = [
@@ -16,6 +18,14 @@ const userTour = [
     <hr>
     <div>
       Products are displayed in grids here.
+    </div>`
+  },
+  {
+    element: ".rainier-footer",
+    intro: `<h2>Page Footer</h2>
+    <hr>
+    <div>
+      This is the page footer where you can access other important pages and supported payment cards.
     </div>`
   },
   {
@@ -47,7 +57,8 @@ const userTour = [
     intro: `<h2>User Account Options</h2>
     <hr>
     <div class="tourcontainer">
-      Register, signin, or signout here.
+      Register, signin, or signout here. If you have signed in, other options such as wallet 
+      become available for you
     </div>`
   },
   {
@@ -77,6 +88,14 @@ const vendorTour = [
     </div>`
   },
   {
+    element: ".rainier-footer",
+    intro: `<h2>Page Footer</h2>
+    <hr>
+    <div>
+      This is the page footer where your customers can access important static pages and supported payment cards.
+    </div>`
+  },
+  {
     element: ".search",
     intro: `<h2>Search</h2>
     <hr>
@@ -98,7 +117,7 @@ const vendorTour = [
     <hr>
     <div class="tourcontainer">
       Access account controls here by choosing from one of the listed options in the 
-      dropdown
+      dropdown including your wallet
     </div>`
   },
   {
@@ -127,6 +146,12 @@ const vendorTour = [
   }
 ];
 
+const updateTakenTour = () => {
+  if (!Accounts.findOne(Meteor.userId()).takenTour) {
+    Accounts.update({ _id: Meteor.userId() }, { $set: { takenTour: true } });
+  }
+};
+
 export function takeTour() {
   let tourSteps;
   if (Reaction.hasPermission("admin")) {
@@ -143,5 +168,7 @@ export function takeTour() {
     steps: tourSteps,
     disableInteraction: true
   });
+  tour.onexit(updateTakenTour)
+  .oncomplete(updateTakenTour);
   tour.start();
 }
