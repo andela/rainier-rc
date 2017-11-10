@@ -13,6 +13,9 @@ const orderFilters = [{
 }, {
   name: "completed",
   label: "Completed"
+}, {
+  name: "canceled",
+  label: "Canceled"
 }];
 
 const OrderHelper =  {
@@ -58,7 +61,7 @@ const OrderHelper =  {
           "shipping.shipped": false
         };
         break;
-
+      // Orders that have been canceled
       case "canceled":
         query = {
           "workflow.status": "canceled"

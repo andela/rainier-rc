@@ -68,5 +68,11 @@ Template.ordersListItems.helpers({
       format: currencyFormat,
       isEditing: false
     };
+  },
+  isDigital() {
+    return this.isDigital;
+  },
+  downloadUrl() {
+    return this.downloadUrl;
   }
 });
