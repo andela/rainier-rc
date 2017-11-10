@@ -41,7 +41,11 @@ Template.CoreNavigationBar.helpers({
       kind: "flat",
       label: "Tour",
       onClick() {
-        takeTour();
+        const currentLocation = location.href.split("/")[location.href.split("/").length - 1];
+        if (currentLocation === "") {
+          return takeTour();
+        }
+        return "";
       }
     };
   },
