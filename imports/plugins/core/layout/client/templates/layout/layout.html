@@ -12,19 +12,36 @@
       <!-- end layoutHeader -->
     </nav>
 
-    <nav class="reaction-cart-drawer">
+    <nav class="reaction-cart-drawer col-md-9 col-md-offset-3">
       {{>cartDrawer}}
     </nav>
 
     <main role="main" id="main">
-      <span id="layout-alerts">{{> inlineAlerts}}</span>
-      {{#if hasPermission 'guest'}}
-        <!-- begin template region -->
-        {{> Template.dynamic template=template}}
-        <!-- end template region -->
-      {{/if}}
+      <div class="row">
 
-      <footer class="reaction-navigation-footer footer-default">{{> Template.dynamic template=layoutFooter}}</footer>
+        <div class="col-md-3 pad-0 hidden-sm hidden-xs">
+          <div class="category-sidebar">
+            <h3 class="pad-20-true mtop-55 cool-blue rainier-bottom-bordered">
+              <strong style="color: white">Categories</strong>
+            </h3>
+            {{> productCategoriesList}}
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-9 pad-0">
+
+            <span id="layout-alerts">{{> inlineAlerts}}</span>
+            {{#if hasPermission 'guest'}}
+              <!-- begin template region -->
+              {{> Template.dynamic template=template}}
+              <!-- end template region -->
+            {{/if}}
+
+            <footer class="reaction-navigation-footer footer-default">
+              {{> Template.dynamic template=layoutFooter}}
+            </footer>
+
+        </div>
+      </div>
     </main>
 
   {{/if}}

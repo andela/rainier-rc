@@ -1,0 +1,13 @@
+<template id="" name="productCategoriesList">
+  <ul>
+    {{#each tag in tags}}
+      <div class="navbar-item" data-id={{tag._id}}>
+
+        <div class="dropdown-container rainier-bottom-bordered" data-tag={{tag._id}}>
+          <h3><a class="category" href="{{pathFor "tag" slug=tag.slug}}" data-id="{{_id}}">{{tag.name}}</a></h3>
+
+        </div>
+      </div>
+    {{/each}}
+  </ul>
+</template>
