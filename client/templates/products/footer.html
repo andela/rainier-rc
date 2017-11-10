@@ -1,33 +1,29 @@
 <template name="rainierFooter">
   <footer class="rainier-footer">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-9 col-sm-12">
-          {{#if staticPagesByCategory}}
-            {{#each category in staticPagesByCategory}}
-              <div class="col-md-4 col-sm-6">
-                <h3 class="rainier-footer-header">
-                  {{#if category.[0].category}}
-                    <strong>{{category.[0].category}}</strong>
-                    {{else}}
-                    <strong>Pages</strong>
-                  {{/if}}
-                </h3>
-                {{#each page in category }}
-                  <p><a href="/pages/{{page.slug}}">{{page.title}}</a></p>
-                {{/each}}
-              </div>
+    <div class="col-md-9 col-sm-12">
+      {{#if staticPagesByCategory}}
+        {{#each category in staticPagesByCategory}}
+          <div class="col-md-4 col-sm-6">
+            <h3 class="rainier-footer-header">
+              {{#if category.[0].category}}
+                <strong>{{category.[0].category}}</strong>
+                {{else}}
+                <strong>Pages</strong>
+              {{/if}}
+            </h3>
+            {{#each page in category }}
+              <p><a href="/pages/{{page.slug}}">{{page.title}}</a></p>
             {{/each}}
-          {{/if}}
-        </div>
-        <div class="col-md-3 col-sm-12">
-          <h3 class="rainier-footer-header"><strong>Payment</strong></h3>
-          <img src="/resources/payment/rc-visa.png" alt="payment-provider" class="payment-icon">
-          <img src="/resources/payment/rc-mastercard.png" alt="payment-provider" class="payment-icon">
-          <img src="/resources/payment/rc-verve.png" alt="payment-provider" class="payment-icon">
-          <img src="/resources/payment/rc-quickteller.png" alt="payment-provider" class="payment-icon">
-        </div>
-      </div>
+          </div>
+        {{/each}}
+      {{/if}}
+    </div>
+    <div class="col-md-3 col-sm-12">
+      <h3 class="rainier-footer-header"><strong>Payment</strong></h3>
+      <img src="/resources/payment/rc-visa.png" alt="payment-provider" class="payment-icon">
+      <img src="/resources/payment/rc-mastercard.png" alt="payment-provider" class="payment-icon">
+      <img src="/resources/payment/rc-verve.png" alt="payment-provider" class="payment-icon">
+      <img src="/resources/payment/rc-quickteller.png" alt="payment-provider" class="payment-icon">
     </div>
   </footer>
 </template>

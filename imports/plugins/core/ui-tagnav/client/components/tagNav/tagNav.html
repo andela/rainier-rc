@@ -10,15 +10,23 @@
       }}
     </div>
     <div class="navbar-items">
-      {{#each tag in tags}}
-        <div class="navbar-item {{navbarSelectedClassName tag}} {{hasDropdownClassName tag}}" data-id={{tag._id}}>
-          {{> tagItem (tagProps tag)}}
+      <div class="hidden-md hidden-lg">
+        <h3 class="pad-20-true cool-blue rainier-bottom-bordered" style="margin-top: 0">
+          <strong style="color: white">Categories</strong>
+        </h3>
+        <h6 class="pad-10 padleft-20">
+          <a href="/" style="color: black">All Products</a>
+        </h6>
+        {{#each tag in tags}}
+          <div class="navbar-item {{navbarSelectedClassName tag}} {{hasDropdownClassName tag}}" data-id={{tag._id}}>
+            {{> tagItem (tagProps tag)}}
 
-          <div class="dropdown-container" data-tag={{tag._id}}>
-            {{> tagTree (tagTreeProps tag)}}
+            <div class="dropdown-container" data-tag={{tag._id}}>
+              {{> tagTree (tagTreeProps tag)}}
+            </div>
           </div>
-        </div>
-      {{/each}}
+        {{/each}}
+      </div>
       {{#if isEditing}}
         <div class="navbar-item create">
           {{> tagItem blankTagProps}}
